@@ -1,0 +1,9 @@
+cd ../hypefetch
+git commit -a -m "update"
+npm run release
+cd ../hypetest
+git commit -a -m "update"
+npm run release
+cd ../hypetask
+git commit -a -m "update"
+npm run release
