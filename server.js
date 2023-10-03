@@ -6,8 +6,10 @@ const kp = crypto.keyPair(crypto.data(b4a.from(process.env.SEED)))
 console.log('PUBLICKEY FOR API '+kp.publicKey.toString('hex'))
 const run = async ()=>{
     const nodes = ['task','fetch','test']
+    if(process.env.DISCORD_TOKEN) nodes.push('discord')
+    if(process.env.OPENAI_API_KEY) nodes.push('openai')
     for(let name of nodes) {
-            startNode(kp, "hype", name);
+            startNode(kp, "hype", name)
     }
 }
 run()
