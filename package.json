@@ -1,14 +1,16 @@
 {
     "name": "hypenode",
     "version": "0.0.9",
-    "type": "module",
     "scripts": {
         "start": "node server.js"
     },
     "exports": "./index.js",
     "dependencies": {
         "b4a": "^1.6.4",
-        "hyper-ipc-secure": "^1.4.26",
-        "hypercore-crypto": "^3.4.0"
+        "dotenv": "^16.3.1",
+        "graceful-goodbye": "^1.3.0",
+        "hyper-ipc-secure": "latest",
+        "hypercore-crypto": "^3.4.0",
+        "kill-with-style": "^1.1.0"
     }
 }
