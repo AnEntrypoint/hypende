@@ -19,28 +19,29 @@ const kill = require("kill-with-style");
  * @param {string} ipcName - Name of the IPC (Inter-Process Communication) call
  * @param {Array} args - Optional arguments for the npx command
  */
-const startNode = async (keyPair, prefix, ipcName, args = []) => {
+const startNode = async (serverKey, callKey, prefix, ipcName, args = [], env) => {
   const node = require("hyper-ipc-secure")();
-
+  const IPCNAME = ipcName;
   // Log the public key and IPCNAME of the node being started
-  console.log("Starting node:", node.getSub(keyPair, ipcName).publicKey.toString("hex"), ipcName);
+  console.log("Starting node:", node.getSub(serverKey, IPCNAME).publicKey.toString("hex"), IPCNAME);
 
   // Convert SERVERKEY and CALLKEY to hex strings
-  const SERVERKEY = Buffer.from(JSON.stringify(node.getSub(keyPair, "firstnode"))).toString("hex");
-  const CALLKEY = Buffer.from(JSON.stringify(node.getSub(keyPair, ipcName))).toString("hex");
+  const SERVERKEY = Buffer.from(JSON.stringify(serverKey)).toString("hex");
+  const CALLKEY = Buffer.from(JSON.stringify(callKey)).toString("hex");
 
   // Start the child process using the npx command
-  const child = spawn("npx", ["-y", prefix + ipcName + "@latest", ...args], {
+  const child = spawn("npx", ["-y", prefix + IPCNAME + "@latest", ...args], {
     shell: true,
     stdio: "inherit",
     env: {
       ...process.env,
-      SERVERKEY: SERVERKEY,
-      CALLKEY: CALLKEY,
-      IPCNAME: ipcName
+      ...env,
+      SERVERKEY,
+      CALLKEY,
+      IPCNAME
     },
   });
-
+  
   // Handle graceful shutdown of the child process
   goodbye(async () => {
     console.log("Stopping node:", node.getSub(keyPair, ipcName).publicKey.toString("hex"), ipcName);
@@ -53,6 +54,7 @@ const startNode = async (keyPair, prefix, ipcName, args = []) => {
       }, res);
     });
   });
+  return {name:ipcName, publicKey:callKey.publicKey, prefix, args}
 };
 
 module.exports = startNode;
