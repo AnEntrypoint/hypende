@@ -23,9 +23,10 @@ const startNode = async (serverKey, callKey, prefix, ipcName, args = [], env) =>
   const node = require("hyper-ipc-secure")();
   const IPCNAME = ipcName;
   // Log the public key and IPCNAME of the node being started
-  console.log("Starting node:", node.getSub(serverKey, IPCNAME).publicKey.toString("hex"), IPCNAME);
+  console.log("Starting node:", IPCNAME);
 
   // Convert SERVERKEY and CALLKEY to hex strings
+  console.log(JSON.stringify(serverKey),JSON.stringify(callKey))
   const SERVERKEY = Buffer.from(JSON.stringify(serverKey)).toString("hex");
   const CALLKEY = Buffer.from(JSON.stringify(callKey)).toString("hex");
 
@@ -44,15 +45,16 @@ const startNode = async (serverKey, callKey, prefix, ipcName, args = [], env) =>
   
   // Handle graceful shutdown of the child process
   goodbye(async () => {
-    console.log("Stopping node:", node.getSub(keyPair, ipcName).publicKey.toString("hex"), ipcName);
+    console.log("Stopping node:", ipcName);
     await new Promise((res) => {
       kill(child.pid, {
-        signal: ["SIGINT", "SIGKILL"],
-        retryCount: 1,
-        retryInterval: 1e4,
-        timeout: 11e3
+        signal: ["SIGINT"],
+        retryCount: 2,
+        retryInterval: 10000,
+        timeout: 20000
       }, res);
     });
+    console.log("Node stopped");
   });
   return {name:ipcName, publicKey:callKey.publicKey, prefix, args}
 };
