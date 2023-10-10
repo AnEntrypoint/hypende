@@ -11,7 +11,7 @@ const {
 } = require("child_process");
 const goodbye = require("graceful-goodbye");
 const kill = require("kill-with-style");
-
+const children = {};
 /**
  * Function to start a node
  * @param {Object} keyPair - Key pair generated using hypercore-crypto or keypear
@@ -31,6 +31,17 @@ const startNode = async (serverKey, callKey, prefix, ipcName, args = [], env) =>
   const CALLKEY = Buffer.from(JSON.stringify(callKey)).toString("hex");
 
   // Start the child process using the npx command
+  console.log('installing', IPCNAME);
+  const first = spawn("npm", ["install", "-y", prefix + IPCNAME + "@latest", ...args], {
+    shell: true,
+    stdio: "inherit",
+  });
+  await new Promise(res=>{
+    first.on('exit', (exitCode) => {
+      res();
+    })
+  })
+  console.log('installed', IPCNAME);
   const child = spawn("npx", ["-y", prefix + IPCNAME + "@latest", ...args], {
     shell: true,
     stdio: "inherit",
@@ -42,11 +53,15 @@ const startNode = async (serverKey, callKey, prefix, ipcName, args = [], env) =>
       IPCNAME
     },
   });
-  
+  children[child.pid] = child;
   // Handle graceful shutdown of the child process
-  goodbye(async () => {
-    console.log("Stopping node:", ipcName);
-    await new Promise((res) => {
+
+  return {name:ipcName, publicKey:callKey.publicKey, prefix, args}
+};
+goodbye(async () => {
+  for(child of Object.values(children)) {
+    console.log("Stopping node:", child.pid);
+    const res = await new Promise((res) => {
       kill(child.pid, {
         signal: ["SIGINT"],
         retryCount: 2,
@@ -54,9 +69,8 @@ const startNode = async (serverKey, callKey, prefix, ipcName, args = [], env) =>
         timeout: 20000
       }, res);
     });
-    console.log("Node stopped");
-  });
-  return {name:ipcName, publicKey:callKey.publicKey, prefix, args}
-};
+    console.log("Node stopped", child.pid);
+  }
+});
 
 module.exports = startNode;
