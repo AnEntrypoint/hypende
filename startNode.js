@@ -41,7 +41,7 @@ const startNode = async (serverKey, callKey, prefix, ipcName, args = [], env) =>
       res();
     })
   })
-  console.log('installed', IPCNAME);
+  console.log('installed', IPCNAME, 'starting', env);
   const child = spawn("npx", ["-y", prefix + IPCNAME + "@latest", ...args], {
     shell: true,
     stdio: "inherit",

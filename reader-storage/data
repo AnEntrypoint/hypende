@@ -1,0 +1,17 @@
+
+hyperbee
+
+
+test[]
+
+
+test{}
+
+
+test{}
+
+
+testÄ[{"name":"test","before":"console.log('before:', params);","after":"console.log('after', out);","output":[],"sub":{"publicKey":"777abfa3235ec041aabfefe07b4fde287f187a5e26fdf437ef431fbcfed96270"}}]
+
+
+testÄ[{"name":"test","before":"console.log('before:', params);","after":"console.log('after', out);","output":[],"sub":{"publicKey":"16979bbe746d383c29bcfa8daab41d00e25bb6fedd79be58277f6a878024e368"}}]
