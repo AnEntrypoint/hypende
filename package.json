@@ -14,6 +14,7 @@
         "hypebee": "^0.0.21",
         "hypecall": "latest",
         "hypefetch": "^0.11.8",
+        "hypegoogle": "^0.0.6",
         "hyper-ipc-secure": "latest",
         "hypercore-crypto": "^3.4.0",
         "hypetest": "^0.11.6",
