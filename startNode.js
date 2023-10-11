@@ -44,14 +44,14 @@ const startNode = async (serverKey, callKey, prefix, ipcName, args = [], env) =>
   })
   console.log('installed', IPCNAME, 'starting', env);
   try {
-    fs.mkdirSync('server-'+serverKey)
+    fs.mkdirSync('server-'+serverKey.publicKey)
   } catch(e) {
 
   }
   const child = spawn("npx", ["-y", prefix + IPCNAME + "@latest", ...args], {
     shell: true,
     stdio: "inherit",
-    cwd:'server-'+serverKey,
+    cwd:'server-'+serverKey.publicKey,
     env: {
       ...process.env,
       ...env,
