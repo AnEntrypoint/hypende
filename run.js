@@ -1,2 +1,3 @@
 #! /usr/bin/env node
-require('hypecall').runCall(require('./server.js'))
+require('./server.js')
+require('hypecall').runCall(()=>{})
