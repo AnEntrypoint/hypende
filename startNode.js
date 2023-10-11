@@ -11,6 +11,7 @@ const {
 } = require("child_process");
 const goodbye = require("graceful-goodbye");
 const kill = require("kill-with-style");
+const fs = require('fs')
 const children = {};
 /**
  * Function to start a node
@@ -42,9 +43,15 @@ const startNode = async (serverKey, callKey, prefix, ipcName, args = [], env) =>
     })
   })
   console.log('installed', IPCNAME, 'starting', env);
+  try {
+    fs.mkdirSync('server-'+serverKey)
+  } catch(e) {
+
+  }
   const child = spawn("npx", ["-y", prefix + IPCNAME + "@latest", ...args], {
     shell: true,
     stdio: "inherit",
+    cwd:'server-'+serverKey,
     env: {
       ...process.env,
       ...env,
