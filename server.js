@@ -1,5 +1,16 @@
 const fs = require('fs')
+
 require("dotenv").config()
+
+const filename = 'nodes.json';
+
+if (!fs.existsSync(filename)) {
+  fs.writeFileSync(filename, '[]', 'utf-8');
+  console.log(`File '${filename}' created with an empty array.`);
+} else {
+  console.log(`File '${filename}' already exists.`);
+}
+
 const crypto = require("hypercore-crypto");
 const startNode = require("./startNode.js")
 console.log(process.argv)
