@@ -5,8 +5,8 @@
         "start": "node server.js",
         "release": "git commit -a -m ranrelease && npm version $(semver $npm_package_version -i patch) && npm publish --tag latest"
     },
-    "bin": "",
-    "exports": "./index.js",
+    "bin": "./server.js",
+    "exports": "./server.js",
     "dependencies": {
         "b4a": "^1.6.4",
         "dotenv": "^16.3.1",
