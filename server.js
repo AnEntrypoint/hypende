@@ -8,10 +8,12 @@ const rootKey = { publicKey: Buffer.from(process.argv[2], 'hex') }
 let hostKey = crypto.keyPair();
 try {
   hostKey = JSON.parse(fs.readFileSync('hostKey.json'))
+  console.log(hostKey)
   hostKey.publicKey = Buffer.from(hostKey.publicKey, 'hex')
   hostKey.secretKey = Buffer.from(hostKey.secretKey, 'hex')
 }catch(e) {
-  fs.writeFileSync('hostKey.json', JSON.stringify(hostKey))
+  console.error(e)
+  fs.writeFileSync('hostKey.json', JSON.stringify({publicKey:hostKey.publicKey.toString('hex'), secretKey:hostKey.secretKey.toString('hex')}))
 }
 
 console.log('host key')
